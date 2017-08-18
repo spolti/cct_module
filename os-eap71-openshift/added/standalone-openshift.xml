@@ -291,7 +291,7 @@
             <cached-connection-manager/>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:jdr:1.0"/>
-        <subsystem xmlns="urn:jboss:domain:jgroups:4.1">
+        <subsystem xmlns="urn:jboss:domain:jgroups:5.0">
             <channels default="ee">
                 <channel name="ee" stack="tcp"/>
             </channels>
@@ -347,7 +347,7 @@
                 <smtp-server outbound-socket-binding-ref="mail-smtp"/>
             </mail-session>
         </subsystem>
-        <subsystem xmlns="urn:jboss:domain:messaging-activemq:1.0">
+        <subsystem xmlns="urn:jboss:domain:messaging-activemq:2.0">
             <!-- ##MESSAGING_SUBSYSTEM_CONFIG## -->
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:modcluster:3.0">
@@ -379,7 +379,7 @@
                 </maximum-set>
             </deployment-permissions>
         </subsystem>
-        <subsystem xmlns="urn:jboss:domain:security:3.0">
+        <subsystem xmlns="urn:jboss:domain:security:2.0">
             <security-domains>
                 <security-domain name="other" cache-type="default">
                     <authentication>
@@ -413,7 +413,7 @@
                 </singleton-policy>
             </singleton-policies>
         </subsystem>
-        <subsystem xmlns="urn:jboss:domain:transactions:3.1">
+        <subsystem xmlns="urn:jboss:domain:transactions:4.0">
             <core-environment node-identifier="${jboss.node.name}">
                 <process-id>
                     <uuid/>
