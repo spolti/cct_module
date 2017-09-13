@@ -126,7 +126,7 @@ function copy_artifacts() {
     types="$types;$1"
     shift
   done
-  
+
   for d in $(echo $dir | tr "," "\n")
   do
     shift
