@@ -40,3 +40,8 @@ Feature: Openshift EAP basic tests
     Then file /opt/eap/standalone/configuration/standalone-openshift.xml should contain <valve name="accessLog" module="org.jboss.openshift" class-name="org.jboss.openshift.valves.StdoutAccessLogValve">
      And file /opt/eap/standalone/configuration/standalone-openshift.xml should contain <param param-name="pattern" param-value="%h %l %u %t %{X-Forwarded-Host}i &quot;%r&quot; %s %b" />
      And file /opt/eap/standalone/configuration/standalone-openshift.xml should contain </valve>
+
+    @wip
+    Scenario: Demo TDC POA, verificar se há uma mensagem nos logs
+      When container is ready
+      Then container log should contain JBAS015874: JBoss EAP 6.4.16.GA (AS 7.5.16.Final-redhat-1) started
