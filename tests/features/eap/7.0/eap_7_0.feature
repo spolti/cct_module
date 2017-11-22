@@ -23,3 +23,11 @@ Feature: Openshift EAP 7.0 basic tests
       | variable          | value                 |
       | ENABLE_ACCESS_LOG | true                  |
     Then file /opt/eap/standalone/configuration/standalone-openshift.xml should contain <access-log use-server-log="true" pattern="%h %l %u %t %{i,X-Forwarded-Host} &quot;%r&quot; %s %b"/>
+
+  @wip
+  Scenario: CLOUD-2151
+    When container is started with env
+      | variable          | value                 |
+      | AMQ               | true                  |
+    Then file /opt/eap/standalone/configuration/standalone-openshift.xml should contain <extension module="org.wildfly.extension.messaging-activemq"/>
+    And file /opt/eap/standalone/configuration/standalone-openshift.xml should contain <subsystem xmlns="urn:jboss:domain:messaging-activemq:1.0">

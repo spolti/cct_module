@@ -96,8 +96,17 @@ function configure_mq() {
     configure_mq_cluster_password
 
     destinations=$(configure_mq_destinations)
-    activemq_subsystem=$(sed -e "s|<!-- ##DESTINATIONS## -->|${destinations}|" <"${ACTIVEMQ_SUBSYSTEM_FILE}" | sed ':a;N;$!ba;s|\n|\\n|g')
+    local subsystem=""
+    if [[ "$JBOSS_EAP_VERSION" == "7.1"* ]]; then
+        subsystem="<subsystem xmlns=\"urn:jboss:domain:messaging-activemq:2.0\">"
+        else
+            subsystem="<subsystem xmlns=\"urn:jboss:domain:messaging-activemq:1.0\">"
+    fi
 
+    activemq_subsystem="${subsystem}"$(sed -e "s|<!-- ##DESTINATIONS## -->|${destinations}|" <"${ACTIVEMQ_SUBSYSTEM_FILE}" | sed ':a;N;$!ba;s|\n|\\n|g')
+    activemq_subsystem="${activemq_subsystem}</subsystem>"
+
+    sed -i "s|<!-- ##ACTIVEMQ_EXTENSION## -->|<extension module=\"org.wildfly.extension.messaging-activemq\"/>|" "${CONFIG_FILE}"
     sed -i "s|<!-- ##MESSAGING_SUBSYSTEM_CONFIG## -->|${activemq_subsystem%$'\n'}|" "${CONFIG_FILE}"
     sed -i 's|<!-- ##MESSAGING_PORTS## -->|<socket-binding name="messaging" port="5445"/><socket-binding name="messaging-throughput" port="5455"/>|' "${CONFIG_FILE}"
   fi

@@ -29,10 +29,10 @@
         <extension module="org.wildfly.extension.clustering.singleton"/>
         <extension module="org.wildfly.extension.elytron"/>
         <extension module="org.wildfly.extension.io"/>
-        <extension module="org.wildfly.extension.messaging-activemq"/>
         <extension module="org.wildfly.extension.request-controller"/>
         <extension module="org.wildfly.extension.security.manager"/>
         <extension module="org.wildfly.extension.undertow"/>
+        <!-- ##ACTIVEMQ_EXTENSION## -->
         <!-- ##KEYCLOAK_EXTENSION## -->
     </extensions>
     <management>
@@ -349,9 +349,7 @@
                 <smtp-server outbound-socket-binding-ref="mail-smtp"/>
             </mail-session>
         </subsystem>
-        <subsystem xmlns="urn:jboss:domain:messaging-activemq:2.0">
-            <!-- ##MESSAGING_SUBSYSTEM_CONFIG## -->
-        </subsystem>
+        <!-- ##MESSAGING_SUBSYSTEM_CONFIG## -->
         <subsystem xmlns="urn:jboss:domain:modcluster:3.0">
             <mod-cluster-config advertise-socket="modcluster" connector="ajp">
                 <dynamic-load-provider>
