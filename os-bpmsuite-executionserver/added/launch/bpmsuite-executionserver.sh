@@ -52,7 +52,8 @@ function configure() {
     configure_server_sync_deploy
     configure_drools
     configure_executor
-    configure_jbpm
+    # configure_jbpm
+    configure_kie_server_capabilities
     # configure_server_state always has to be last
     configure_server_state
 }
@@ -249,17 +250,55 @@ function configure_executor(){
     fi
 }
 
-function configure_jbpm(){
-    # jbpm capabilities configuration
-    if [ "${JBPM_HT_CALLBACK_METHOD}" != "" ]; then
-        JBOSS_BPMSUITE_ARGS="${JBOSS_BPMSUITE_ARGS} -Dorg.jbpm.ht.callback=${JBPM_HT_CALLBACK_METHOD}"
+#function configure_jbpm(){
+#    # jbpm capabilities configuration
+#    if [ "${JBPM_HT_CALLBACK_METHOD}" != "" ]; then
+#        JBOSS_BPMSUITE_ARGS="${JBOSS_BPMSUITE_ARGS} -Dorg.jbpm.ht.callback=${JBPM_HT_CALLBACK_METHOD}"
+#    fi
+#    if [ "${JBPM_HT_CALLBACK_CLASS}" != "" ]; then
+#        JBOSS_BPMSUITE_ARGS="${JBOSS_BPMSUITE_ARGS} -Dorg.jbpm.ht.custom.callback=${JBPM_HT_CALLBACK_CLASS}"
+#    fi
+#    if [ "${JBPM_LOOP_LEVEL_DISABLED}" != "" ]; then
+#        JBOSS_BPMSUITE_ARGS="${JBOSS_BPMSUITE_ARGS} -Djbpm.loop.level.disabled=${JBPM_LOOP_LEVEL_DISABLED}"
+#    fi
+#}
+
+function configure_kie_server_capabilities() {
+    # Drools KIE Server extension has been successfully registered as server extension -> only on rhdm
+    #   property: org.drools.server.ext.disabled=
+    # jBPM KIE Server extension has been successfully registered as server extension -> only on jbpm
+    #   property: org.jbpm.server.ext.disabled
+    # jBPM-UI KIE Server extension has been successfully registered as server extension -> disabled
+    #   property: org.jbpm.ui.server.ext.disabled
+    # Case-Mgmt KIE Server extension has been successfully registered as server extension -> only on jbpm
+    #   property: org.jbpm.case.server.ext.disabled
+    # OptaPlanner KIE Server extension has been successfully registered as server extension
+    # DMN KIE Server extension has been successfully registered as server extension
+    # Swagger KIE Server extension has been successfully registered as server extension
+
+    local kieServerCapabilities
+    # if enabled disable the BRM related capabilities
+    bpmEnabled=$(echo "${KIE_SERVER_BPM_ENABLED}" | tr [:upper:] [:lower:])
+    if [ "${bpmEnabled}" = "true" ] || [ "${bpmEnabled}" = "enabled" ]; then
+        kieServerCapabilities="-Dorg.drools.server.ext.disabled=true"
+        if [ "${JBPM_HT_CALLBACK_METHOD}" != "" ]; then
+            JBOSS_BPMSUITE_ARGS="${JBOSS_BPMSUITE_ARGS} -Dorg.jbpm.ht.callback=${JBPM_HT_CALLBACK_METHOD}"
+        fi
+        if [ "${JBPM_HT_CALLBACK_CLASS}" != "" ]; then
+            JBOSS_BPMSUITE_ARGS="${JBOSS_BPMSUITE_ARGS} -Dorg.jbpm.ht.custom.callback=${JBPM_HT_CALLBACK_CLASS}"
+        fi
+        if [ "${JBPM_LOOP_LEVEL_DISABLED}" != "" ]; then
+            JBOSS_BPMSUITE_ARGS="${JBOSS_BPMSUITE_ARGS} -Djbpm.loop.level.disabled=${JBPM_LOOP_LEVEL_DISABLED}"
+        fi
     fi
-    if [ "${JBPM_HT_CALLBACK_CLASS}" != "" ]; then
-        JBOSS_BPMSUITE_ARGS="${JBOSS_BPMSUITE_ARGS} -Dorg.jbpm.ht.custom.callback=${JBPM_HT_CALLBACK_CLASS}"
+
+    # if enabled disable the BPM related capabilities
+    brmEnabled=$(echo "${KIE_SERVER_BRM_ENABLED}" | tr [:upper:] [:lower:])
+    if [ "${brmEnabled}" = "true" ] || [ "${brmEnabled}" = "enabled" ]; then
+        kieServerCapabilities="${kieServerCapabilities} -Dorg.jbpm.server.ext.disabled=true -Dorg.jbpm.ui.server.ext.disabled=true -Dorg.jbpm.case.server.ext.disabled=true"
     fi
-    if [ "${JBPM_LOOP_LEVEL_DISABLED}" != "" ]; then
-        JBOSS_BPMSUITE_ARGS="${JBOSS_BPMSUITE_ARGS} -Djbpm.loop.level.disabled=${JBPM_LOOP_LEVEL_DISABLED}"
-    fi
+
+    JBOSS_BPMSUITE_ARGS="${JBOSS_BPMSUITE_ARGS} ${kieServerCapabilities}"
 }
 
 function configure_server_state() {
