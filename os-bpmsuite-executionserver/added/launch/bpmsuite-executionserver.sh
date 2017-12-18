@@ -290,21 +290,21 @@ function configure_server_state() {
 
     # see above: configure_server_env / kieserver-env.sh / setKieEnv
     if [ "${KIE_SERVER_CONTAINER_DEPLOYMENT}" != "" ]; then
-        # ensure all KIE dependencies are pulled for offline use (this duplicates s2i process; TODO: short-circuit if possible?)
-        $JBOSS_HOME/bin/launch/kieserver-pull.sh
-        ERR=$?
-        if [ $ERR -ne 0 ]; then
-            echo "Aborting due to error code $ERR from maven kjar dependency pull"
-            exit $ERR
-        fi
-
-        # verify all KIE containers (this duplicates s2i process; TODO: short-circuit if possible?)
-        $JBOSS_HOME/bin/launch/kieserver-verify.sh
-        ERR=$?
-        if [ $ERR -ne 0 ]; then
-            echo "Aborting due to error code $ERR from maven kjar verification"
-            exit $ERR
-        fi
+#        # ensure all KIE dependencies are pulled for offline use (this duplicates s2i process; TODO: short-circuit if possible?)
+#        $JBOSS_HOME/bin/launch/kieserver-pull.sh
+#        ERR=$?
+#        if [ $ERR -ne 0 ]; then
+#            echo "Aborting due to error code $ERR from maven kjar dependency pull"
+#            exit $ERR
+#        fi
+#
+#        # verify all KIE containers (this duplicates s2i process; TODO: short-circuit if possible?)
+#        $JBOSS_HOME/bin/launch/kieserver-verify.sh
+#        ERR=$?
+#        if [ $ERR -ne 0 ]; then
+#            echo "Aborting due to error code $ERR from maven kjar verification"
+#            exit $ERR
+#        fi
 
         # create a KIE server state file with all configured containers and properties
         local stateFileInit="org.kie.server.services.impl.storage.file.KieServerStateFileInit"
